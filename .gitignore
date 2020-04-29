@@ -1,1 +1,8 @@
 notes.txt
+testing.ipynb
+
+__pycache__/
+*.py[cod]
+*.pyc
+*$py.class
+.ipynb_checkpoints
