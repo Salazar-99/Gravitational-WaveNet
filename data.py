@@ -4,7 +4,8 @@ from pycbc.waveform import get_td_waveform
 def generate_data(sample_rate, mass_range, mass_step):
     '''
     Function for generating synthetic gravitational waveforms
-    for binary mergers of equal masses over a specified range of masses.
+    for binary mergers of equal masses over a specified range of masses
+    along with positive labels
     Param: sample_rate (Hz) - Integer number of measurements per second
     Param: mass_range (solar masses) - List of form [lower_bound, upper_bound] for mass range
     Param: mass_step (solar masses) - Float indicating step size for mass range
@@ -19,16 +20,22 @@ def generate_data(sample_rate, mass_range, mass_step):
         wave = wave/max(np.correlate(wave, wave, mode="full"))**0.5
         #Saving waveform as numpy array
         data.append(wave)
-    return data
+    labels = np.ones(len(data[0]))
+    return data, labels
 
-def generate_noise(sample_rate, length):
+def generate_noise(num_sequences, sample_rate, length):
     '''
-    Function for generating sequences of white noise
+    Function for generating sequences of white noise and negative labels
+    Param: num_sequences - Integer number of noise sequences to generate
     Param: sample_rate (Hz) - Integer number of measurements per second
     Param: length (s) - Length of sequence in seconds
     '''
-    noise = np.random.normal(size=[sample_rate*length])
-    return noise
+    noise = []
+    for sequence in num_sequences:
+        temp = np.random.normal(size=[sample_rate*length])
+        noise.append(temp)
+    labels = np.zeros(num_sequences)
+    return noise, labels
 
 def save_data(data, sample_rate, mass_range, mass_step):
     '''
