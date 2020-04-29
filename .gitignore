@@ -1,5 +1,6 @@
 notes.txt
 testing.ipynb
+.gitignore
 
 __pycache__/
 *.py[cod]
