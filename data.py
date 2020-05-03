@@ -30,21 +30,20 @@ def generate_data(batch_size, sample_rate, mass_range):
     return np.asarray(data), labels
 
 
-def generate_noise(batch_size, sample_rate):
+def generate_noise(batch_size):
     '''
     Function for generating sequences of white noise of fixed length (256) and negative class labels
     Param: batch_size - Integer number of noise sequences to produce
-    Param: sample_rate (Hz) - Integer number of measurements per second
     Param: length (s) - Length of sequence in seconds
     '''
     noise = []
-    for sequence in range(num_sequences):
-        temp = np.random.normal(size=[sample_rate*length])
+    for i in range(batch_size):
+        temp = np.random.normal(size=[256])
         noise.append(temp)
-    labels = np.zeros(num_sequences)
+    labels = np.zeros(batch_size)
     return noise, labels
 
-def save_data(data, sample_rate, mass_range, mass_step):
+def save_data(data, sample_rate, mass_range, batch_size):
     '''
     Function for saving generated data to a numpy file
     in data directory for repeatability
@@ -52,7 +51,7 @@ def save_data(data, sample_rate, mass_range, mass_step):
     Params: The rest are identical to generate_data()
     '''
     #Generating filename containing parameters used to create data
-    file = f"data/data-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-ms:{mass_step}" 
+    file = f"data/data-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-bs:{batch_size}" 
     #Saving data
     np.save(file, data)
 
@@ -64,7 +63,7 @@ def combine_data(data, noise, data_labels, noise_labels):
     Param: data_labels - Numpy array of 1's for positive class
     Param: noise - list of noise sequences
     Param: noise_labels - Numpy array of 0's for negative class
-    Output: X - Numpy array of numpy arrays of waveforms/data
+    Output: X - Numpy array of numpy arrays of data/noise
     Output: y - numpy array containing labels
     '''
     X = []
