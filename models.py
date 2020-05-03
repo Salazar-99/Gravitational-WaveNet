@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 #CNN stacked on top of GRU
-class CGRU(tf.keras.Model):
+class GWN(tf.keras.Model):
     #Constructor
     def __init__(self, conv_layers=2, filters=[32,32], kernel_size=[4,4], dilation_rate=2, gru_cells=32, **kwargs):
         '''
@@ -13,8 +13,8 @@ class CGRU(tf.keras.Model):
         '''
         #Inheriting from keras.Model
         super().__init__(**kwargs)
-        #Set input shape of unspecified length
-        self._input = tf.keras.layers.InputLayer(input_shape=([None, 1]))
+        #Set input shape of batch_size=1, unspecified sequence length, 1D data
+        self._input = tf.keras.layers.InputLayer(input_shape=([1,None,1]))
         #Build convolutional layers
         self.conv_layers = []
         for layer in range(conv_layers):
@@ -27,7 +27,7 @@ class CGRU(tf.keras.Model):
         #Build GRU layer
         self.gru_layer = tf.keras.layers.GRU(gru_cells, return_sequences=True)
         #Output layer
-        self._output = tf.keras.layers.Dense(1, activation='softmax')
+        self._output = tf.keras.layers.Dense(1, activation='sigmoid')
     
     #Forward pass
     def call(self, inputs):
@@ -41,7 +41,7 @@ class CGRU(tf.keras.Model):
     def get_dilation_rate(self, depth, dilation_rate):
         return depth**dilation_rate
     
-    def prop_through_layers(x, layers):
+    def prop_through_layers(self, x, layers):
         for layer in layers:
             x = layer(x)
         return x
