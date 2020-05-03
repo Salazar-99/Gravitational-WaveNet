@@ -13,11 +13,15 @@ class GWN(tf.keras.Model):
         '''
         #Inheriting from keras.Model
         super().__init__(**kwargs)
-        #Set input shape of batch_size=1, unspecified sequence length, 1D data
-        self._input = tf.keras.layers.InputLayer(input_shape=([1,None,1]))
-        #Build convolutional layers
+        #First convolutional layer specifies input size
+        tf.keras.layers.Conv1D(filters=filters[0], 
+                                kernel_size=kernel_size[0], 
+                                padding='causal', 
+                                activation='relu', 
+                                input_shape=[None,1])
+        #Building the rest of the conolutional layers
         self.conv_layers = []
-        for layer in range(conv_layers):
+        for layer in range(1,conv_layers):
             dilation_rate = self.get_dilation_rate(layer, dilation_rate)
             self.conv_layers.append(tf.keras.layers.Conv1D(filters=filters[layer], 
                                                             kernel_size=kernel_size[layer],
@@ -27,7 +31,7 @@ class GWN(tf.keras.Model):
         #Build GRU layer
         self.gru_layer = tf.keras.layers.GRU(gru_cells, return_sequences=True)
         #Output layer
-        self._output = tf.keras.layers.Dense(1, activation='sigmoid')
+        self._output = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(1, activation='sigmoid'))
     
     #Forward pass
     def call(self, inputs):

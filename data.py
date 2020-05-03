@@ -77,4 +77,4 @@ def combine_data(data, noise, data_labels, noise_labels):
         y.append(label)
     for label in noise_labels:
         y.append(label)
-    return np.asarray(X), np.asarray(y)
+    return np.asarray(X)[..., np.newaxis], np.asarray(y)
