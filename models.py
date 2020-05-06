@@ -14,7 +14,7 @@ class GWN(tf.keras.Model):
         #Inheriting from keras.Model
         super().__init__(**kwargs)
         #First convolutional layer specifies input size
-        tf.keras.layers.Conv1D(filters=filters[0], 
+        self.conv_1 = tf.keras.layers.Conv1D(filters=filters[0], 
                                 kernel_size=kernel_size[0], 
                                 padding='causal', 
                                 activation='relu', 
@@ -35,8 +35,8 @@ class GWN(tf.keras.Model):
     
     #Forward pass
     def call(self, inputs):
-        inputs = self._input(inputs)
-        conv_output = self.prop_through_layers(inputs, self.conv_layers)
+        conv_1_output = self.conv_1(inputs)
+        conv_output = self.prop_through_layers(conv_1_output, self.conv_layers)
         gru_output = self.gru_layer(conv_output)
         _output = self._output(gru_output)
         return _output

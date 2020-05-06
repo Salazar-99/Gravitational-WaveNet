@@ -30,23 +30,55 @@ def generate_data(batch_size, sample_rate, mass_range):
     return np.asarray(data), labels
 
 
-def generate_noise(batch_size):
+def generate_noise(batch_size, sd=1):
     '''
     Function for generating sequences of white noise of fixed length (256) and negative class labels
     Param: batch_size - Integer number of noise sequences to produce
-    Param: length (s) - Length of sequence in seconds
+    Param: sd - Standard deviation of gaussian noise produced
     '''
     noise = []
     for i in range(batch_size):
-        temp = np.random.normal(size=[256])
+        temp = np.random.normal(scale=sd, size=[256])
         noise.append(temp)
     labels = np.zeros(batch_size)
     return noise, labels
 
+def generate_noisy_data(snr, batch_size, sample_rate, mass_range):
+    '''
+    Function for generating synthetic gravitational waveforms
+    with additive gaussian noise of a specified signal-to-noise ratio.
+    Param: snr - Signal to noise ratio
+    Params: The rest are identical to generate_data()
+    '''
+    #Generate pure waveforms and labels
+    raw_data, labels = generate_data(batch_size, sample_rate, mass_range)
+    #Compute average power of pure waveforms
+    power = avg_power(raw_data)
+    #Compute required noise power to achieve specified SNR
+    sd = np.sqrt(snr*power)
+    #Generating noise of specified power
+    noise, _ = generate_noise(batch_size, sd)
+    #Combining the data and the noise
+    data = raw_data + noise
+    return data, labels
+
+def avg_power(data):
+    '''
+    Function for computing the average power of an array of waveforms
+    Param: data - Numpy array containing numpy arrays of waveforms
+    '''
+    powers = []
+    #Calculate power of each waveform
+    for wave in data:
+        powers.append(np.square(np.sum(wave))/256)
+    #Return mean of powers
+    return np.mean(powers)
+
+
 def save_data(data, sample_rate, mass_range, batch_size):
     '''
     Function for saving generated data to a numpy file
-    in data directory for repeatability
+    in data directory for reproducability
     Param: data - output of generate_data()
     Params: The rest are identical to generate_data()
     '''
