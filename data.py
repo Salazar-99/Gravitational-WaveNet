@@ -29,7 +29,6 @@ def generate_data(batch_size, sample_rate, mass_range):
     labels = np.ones(len(data))
     return np.asarray(data), labels
 
-
 def generate_noise(batch_size, sd=1):
     '''
     Function for generating sequences of white noise of fixed length (256) and negative class labels
@@ -46,12 +45,13 @@ def generate_noise(batch_size, sd=1):
 def generate_noisy_data(snr, batch_size, sample_rate, mass_range):
     '''
     Function for generating synthetic gravitational waveforms
-    with additive gaussian noise of a specified signal-to-noise ratio.
+    with additive gaussian noise of a specified signal-to-noise ratio, positive class labels,
+    guassian noise with fixed power, and negative class labels
     Param: snr - Signal to noise ratio
     Params: The rest are identical to generate_data()
     '''
     #Generate pure waveforms and labels
-    raw_data, labels = generate_data(batch_size, sample_rate, mass_range)
+    raw_data, data_labels = generate_data(batch_size, sample_rate, mass_range)
     #Compute average power of pure waveforms
     power = avg_power(raw_data)
     #Compute required noise power to achieve specified SNR
@@ -59,8 +59,10 @@ def generate_noisy_data(snr, batch_size, sample_rate, mass_range):
     #Generating noise of specified power
     noise, _ = generate_noise(batch_size, sd)
     #Combining the data and the noise
-    data = raw_data + noise
-    return data, labels
+    noisy_data = raw_data + signal_noise
+    #Generating noise of specified power for negative class
+    noise, noise_labels = generate_noise(batch_size, sd)
+    return noisy_data, noisy_data_labels, noise, noise_labels
 
 def avg_power(data):
     '''
@@ -74,8 +76,7 @@ def avg_power(data):
     #Return mean of powers
     return np.mean(powers)
 
-
-def save_data(data, sample_rate, mass_range, batch_size):
+def save_data(data, sample_rate, mass_range, batch_size, snr):
     '''
     Function for saving generated data to a numpy file
     in data directory for reproducability
@@ -83,7 +84,7 @@ def save_data(data, sample_rate, mass_range, batch_size):
     Params: The rest are identical to generate_data()
     '''
     #Generating filename containing parameters used to create data
-    file = f"data/data-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-bs:{batch_size}" 
+    file = f"data/data-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-bs:{batch_size}-snr:{snr}" 
     #Saving data
     np.save(file, data)
 

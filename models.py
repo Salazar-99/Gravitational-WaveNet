@@ -19,7 +19,7 @@ class GWN(tf.keras.Model):
                                 padding='causal', 
                                 activation='relu', 
                                 input_shape=[None,1])
-        #Building the rest of the conolutional layers
+        #Building the rest of the convolutional layers
         self.conv_layers = []
         for layer in range(1,conv_layers):
             dilation_rate = self.get_dilation_rate(layer, dilation_rate)
