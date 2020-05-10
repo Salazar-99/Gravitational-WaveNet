@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-#CNN stacked on top of GRU
+#Gravitational-WaveNet
 class GWN(tf.keras.Model):
     #Constructor
     def __init__(self, conv_layers=2, filters=[32,32], kernel_size=[4,4], dilation_rate=2, gru_cells=32, **kwargs):

@@ -57,12 +57,10 @@ def generate_noisy_data(snr, batch_size, sample_rate, mass_range):
     #Compute required noise power to achieve specified SNR
     sd = np.sqrt(snr*power)
     #Generating noise of specified power
-    noise, _ = generate_noise(batch_size, sd)
+    signal_noise, _ = generate_noise(batch_size, sd)
     #Combining the data and the noise
     noisy_data = raw_data + signal_noise
-    #Generating noise of specified power for negative class
-    noise, noise_labels = generate_noise(batch_size, sd)
-    return noisy_data, noisy_data_labels, noise, noise_labels
+    return noisy_data
 
 def avg_power(data):
     '''
@@ -84,7 +82,7 @@ def save_data(data, sample_rate, mass_range, batch_size, snr):
     Params: The rest are identical to generate_data()
     '''
     #Generating filename containing parameters used to create data
-    file = f"data/data-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-bs:{batch_size}-snr:{snr}" 
+    file = f"data/data-snr:{snr}-sr:{sample_rate}-mr:({mass_range[0]}-{mass_range[1]})-bs:{batch_size}" 
     #Saving data
     np.save(file, data)
 

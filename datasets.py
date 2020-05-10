@@ -1,5 +1,5 @@
 from data import *
-import argparser
+import argparse
 
 #Argument parser 
 parser = argparse.ArgumentParser(description='Specify model hyperparameters and data path')
@@ -14,8 +14,7 @@ parser.add_argument('--mass_range', nargs='+', type=int, help="List containing u
 args = parser.parse_args()
 
 #Generate the data
-data, data_labels, noise, noise_labels = generate_noisy_data(args.snr, args.batch_size, args.sample_rate, args.mass_range)
+data = generate_noisy_data(args.snr, args.batch_size, args.sample_rate, args.mass_range)
 
 #Save the data
-collection = [data, data_labels, noise, noise_labels]
-save_data(collection, args.sample_rate, args.mass_range, args.batch_size, args.snr)
+save_data(data, args.sample_rate, args.mass_range, args.batch_size, args.snr)

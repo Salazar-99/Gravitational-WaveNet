@@ -28,12 +28,10 @@ model = GWN(conv_layers=args.conv_layers,
 
 #Loading data
 data = np.load(args.data_path, allow_pickle=True)
+data_labels = np.ones(len(data))
 
-#Separating data
-data = data[0]
-data_labels = data[1]
-noise = data[2]
-noise_labels = data[3]
+#Generating noise
+noise, noise_labels = generate_noise(batch_size=len(data))
 
 #Combining data
 X, y = combine_data(data, noise, data_labels, noise_labels)
@@ -51,18 +49,18 @@ test_loss = results[0]
 test_accuracy = results[1]
 
 #Logging results
-file = str(datetime.datetime.now()).replace(" ", "-")
-experiment_output = open(file, 'w+')
+file = "experiments/" + str(datetime.datetime.now()).replace(" ", "-") + ".txt"
 logs = [
-    f"Date: {datetime.datetime.now()}",
-    f"conv_layers: {args.conv_layers}",
-    f"filters: {args.filters}",
-    f"kernel_size: {args.kernel_size}",
-    f"dilation_rate: {args.dilation_rate}",
-    f"gru_cells: {args.gru_cells}",
-    f"epochs: {args.epochs}",
-    f"data: {args.data_path}",
-    f"Test loss: {test_loss}",
+    f"Time: {datetime.datetime.now()}"+"\n",
+    f"conv_layers: {args.conv_layers}"+"\n",
+    f"filters: {args.filters}"+"\n",
+    f"kernel_size: {args.kernel_size}"+"\n",
+    f"dilation_rate: {args.dilation_rate}"+"\n",
+    f"gru_cells: {args.gru_cells}"+"\n",
+    f"epochs: {args.epochs}"+"\n",
+    f"data: {args.data_path}"+"\n",
+    f"Test loss: {test_loss}"+"\n",
     f"Test accuracy: {test_accuracy}"
 ]
-experiment_output.writelines(logs)
+with open(file, 'w+') as f:
+    f.writelines(logs)
