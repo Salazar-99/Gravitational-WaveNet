@@ -1,0 +1,10 @@
+Time: 2020-05-11 17:50:49.034698
+conv_layers: 2
+filters: [32, 32]
+kernel_size: [4, 4]
+dilation_rate: 2
+gru_cells: 32
+epochs: 20
+data: data/data-snr:50.0-sr:60-mr:(10-50)-bs:100.npy
+Test loss: 0.025956833362579347
+Test accuracy: 0.988574206829071
