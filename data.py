@@ -70,7 +70,7 @@ def avg_power(data):
     powers = []
     #Calculate power of each waveform
     for wave in data:
-        powers.append(np.square(np.sum(wave))/256)
+        powers.append(np.sum(np.square(wave))/256)
     #Return mean of powers
     return np.mean(powers)
 

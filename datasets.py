@@ -18,3 +18,7 @@ data = generate_noisy_data(args.snr, args.batch_size, args.sample_rate, args.mas
 
 #Save the data
 save_data(data, args.sample_rate, args.mass_range, args.batch_size, args.snr)
+
+#Print the path
+file = f"data/data-snr:{args.snr}-sr:{args.sample_rate}-mr:({args.mass_range[0]}-{args.mass_range[1]})-bs:{args.batch_size}" 
+print(f"Data saved at: {file}")
