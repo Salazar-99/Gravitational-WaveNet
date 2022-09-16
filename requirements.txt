@@ -48,7 +48,7 @@ lalsuite==6.66
 ligo-segments==1.2.0
 ligotimegps==2.0.1
 lscsoft-glue==2.0.0
-Mako==1.1.2
+Mako==1.2.2
 Markdown==3.2.1
 MarkupSafe==1.1.1
 matplotlib==3.2.1
